@@ -1,7 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
-import Header from '../Header/Header';
+import Header from '../Header';
 import ListItem from './ListItem';
 
 const StyledListContainer = styled.ul`
@@ -10,13 +11,14 @@ const StyledListContainer = styled.ul`
 `;
 
 const List = () => {
+  let history = useHistory();
   const recipesList = useSelector(state => state.recipesList);
 
   return (
     <>
       <Header 
         label="Recepty"
-        add={{ onClick: () => alert("Clicked!") }}
+        onAdd={() => history.push("/new")}
       />
       <StyledListContainer>
         {recipesList.recipes.map(item => <ListItem key={item.id} item={item} />) }

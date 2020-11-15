@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import StarRateIcon from '@material-ui/icons/StarRate';
 import ScheduleIcon from '@material-ui/icons/Schedule';
@@ -46,6 +46,7 @@ const StyledScheduleIcon = styled(ScheduleIcon)`
 `;
 
 const ListItem = ({ item }) => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const stars = [];
 
@@ -53,17 +54,20 @@ const ListItem = ({ item }) => {
     stars.push(<StarRateIcon key={i} className="star-icon"/>);
   }
 
+  const onClickHandler = () => {
+    dispatch(fetchRecipe(item.id))
+    history.push('/item');
+  }
+
   return (
-    <Link to="/item">
-      <ItemContainer onClick={() => dispatch(fetchRecipe(item.id))}>
-        <Image src={logo}/>
-        <InfoContainer>
-          <h3>{item.name}</h3>
-          <div>{stars}</div>
-          <div><StyledScheduleIcon /> {item.duration} min.</div>
-        </InfoContainer>
-      </ItemContainer>
-    </Link>
+    <ItemContainer onClick={onClickHandler}>
+      <Image src={logo}/>
+      <InfoContainer>
+        <h3>{item.name}</h3>
+        <div>{stars}</div>
+        <div><StyledScheduleIcon /> {item.duration} min.</div>
+      </InfoContainer>
+    </ItemContainer>
   )
 };
 

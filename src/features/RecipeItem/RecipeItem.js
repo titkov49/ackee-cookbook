@@ -1,12 +1,15 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import image from '../ackee.jpg';
 import StarRateIcon from '@material-ui/icons/StarRate';
 import ScheduleIcon from '@material-ui/icons/Schedule';
-import { addRating } from './itemSlice';
+import { updateRating } from './itemSlice';
+import Header from '../Header';
+import { fetchRecipes } from '../RecipesList/listSlice';
 
-const Header = styled.div`
+const Image = styled.div`
   width: 100%;
   height: 24rem;
   position: relative;
@@ -64,17 +67,18 @@ const RatingContainer = styled.div`
   color: white;
 `;
 
+const StyledStarRateIcon = styled(StarRateIcon)`cursor: pointer;`
+
 const RecipeItem = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const recipeItem = useSelector(state => state.recipeItem);
 
   if (!recipeItem || !recipeItem.recipe) return <p>No item</p>
 
   const { name, description, duration,
-    ingredients, info, score, rating
+    ingredients, info, score, id
   } = recipeItem.recipe;
-  
-  console.log(recipeItem);
 
   let scoreStars = [];
   if (score) {
@@ -85,21 +89,29 @@ const RecipeItem = () => {
 
   
     const ratingStars = [];
-    if (rating) {
-      for (let i = 0; i < rating; i++)
-        ratingStars.push(<StarRateIcon key={i} />);
-    } else {
+    if (!score) {
       for (let i = 0; i < 5; i++)
-        ratingStars.push(<StarRateIcon key={i} onClick={() => dispatch(addRating(i))} />);
+        ratingStars.push(
+          <StyledStarRateIcon
+            key={i} 
+            onClick={() => dispatch(updateRating({ id, score: i+1}))}
+          />
+        );
     }
   
-  
-
   return (
     <>
-      <Header>
+      <Header
+        onAdd={() => history.push('/edit')}
+        onArrow={() => {
+          dispatch(fetchRecipes());
+          history.push('/');
+        }}
+        absolute
+      />
+      <Image>
         <h3>{name}</h3>
-      </Header>
+      </Image>
       <BaseInfo>
         <div>{scoreStars}</div>
         <div>
@@ -110,15 +122,17 @@ const RecipeItem = () => {
         <p>{info}</p>
         <h3>Ingredience</h3>
         <ul>
-          {ingredients.map(item => <li>{item}</li>)}
+          {ingredients.map((item, i) => <li key={i}>{item}</li>)}
         </ul>
         <h3>Příprava jídla</h3>
         <p>{description}</p>
       </Description>
-      <RatingContainer>
-        <h4>{rating ? 'Your rating' : 'Ohodnoť tento recept'}</h4>
-        <div>{ratingStars}</div>
-      </RatingContainer>
+      {!score &&
+        <RatingContainer>
+          <h4>{score ? 'Your rating' : 'Ohodnoť tento recept'}</h4>
+          <div>{ratingStars}</div>
+        </RatingContainer>
+      }
     </>
   )
 };

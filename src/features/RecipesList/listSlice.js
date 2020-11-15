@@ -7,7 +7,7 @@ export const fetchRecipes = createAsyncThunk('list/fetchRecipes', async (offset 
 });
 
 export const createRecipe = createAsyncThunk('list/createRecipe', async (item) => {
-  const response = await axios.post('', item);
+  const response = await axios.post('recipes', item);
   return response.data;
 });
 
