@@ -7,6 +7,7 @@ import { createRecipe, fetchRecipes } from '../RecipesList/listSlice';
 import { updateRecipe } from '../RecipeItem/itemSlice';
 
 const FormContainer = styled.div`
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
