@@ -15,8 +15,8 @@ const Image = styled.div`
   position: relative;
   background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(${image});
   background-repeat: no-repeat;
-  background-clip: padding-box
-  background-size: auto;
+  background-position: top;
+  background-size: 120% 120%;
 
   h3 {
     color: white;
